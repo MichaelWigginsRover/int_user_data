@@ -1,0 +1,13 @@
+  SELECT
+    promos_coupon.code AS empm_code,
+    promos_coupon.person_id AS coupon_person_id,
+    CONCAT('https://www.rover.com/sit/', empm_code) AS profile_link
+  FROM
+    roverdb.promos_coupon 
+  LEFT JOIN
+    roverdb.promos_coupongroup
+  ON
+    (promos_coupongroup.id = promos_coupon.group_id)
+  WHERE
+    group_id = 1
+    AND title = 'Sitter Self Promotion'   
