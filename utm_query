@@ -1,0 +1,17 @@
+  SELECT 
+    marketing_personreferraltracking.person_id AS utm_details_people_id,
+    MIN(CASE WHEN lower(marketing_personreferraltracking.created_utm_source) LIKE 'facebook%' THEN 'Facebook'
+         WHEN lower(marketing_personreferraltracking.created_utm_source) LIKE 'google%' AND lower(marketing_personreferraltracking.created_utm_source) NOT LIKE '%play%' THEN 'Google SE'
+         WHEN lower(marketing_personreferraltracking.created_utm_source) LIKE 'indeed%' THEN 'Indeed'
+         ELSE marketing_personreferraltracking.created_utm_source 
+         END) AS created_utm_source 
+  FROM
+     roverdb.marketing_personreferraltracking
+  JOIN
+    roverdb.wizards_wizardprogress
+  ON
+    (wizards_wizardprogress.person_id = marketing_personreferraltracking.person_id)
+    AND (wizards_wizardprogress.slug <> 'extra-services-signup-wizard')
+    AND (wizards_wizardprogress.step_index >= 13)
+  GROUP BY
+    1
