@@ -1,0 +1,42 @@
+   SELECT  
+        REPLACE(django_geo_zipcode.zip_code,' ',''),
+        people_personlocation.zip,
+        people_person.id AS person_id,
+        people_person.sitter_intent,
+        django_geo_zipcode.city AS django_city,
+        people_personlocation .city AS people_personlocation_city,
+        CASE WHEN django_city IS NULL THEN people_personlocation_city ELSE django_city END AS final_city,
+        CASE WHEN  LOWER(django_city) IN('city of london', 'westminster', 'kensington and chelsea', 'southwark', 
+                                              'tower hamlets','hackney','islington','camden') THEN 'Central London'
+               WHEN LOWER(django_city) IN('hammersmith and fulham','wandsworth','brent','ealing','hounslow',
+                                             'richmond upon thames','harrow','hillingdon') THEN 'West London'
+               WHEN LOWER(django_city) IN('lambeth','kingston upon thames','merton','sutton','croydon','bromley',
+                                             'lewisham') THEN 'South London'
+               WHEN LOWER(django_city) IN('greenwich','bexley','havering','barking and dagenham','redbridge',
+                                             'newham') THEN 'East London'
+               WHEN LOWER(django_city) IN('waltham forest','haringey','enfield','barnet') THEN 'North London'
+               WHEN (LOWER(django_city) IS NULL OR LOWER(django_city) = ' ') 
+                                            AND people_personlocation.zip IN('EC2V','EC1P','SE10','NW1','E14') THEN 'Central London' 
+               WHEN (LOWER(django_city) IS NULL OR LOWER(django_city) = ' ') 
+                                            AND LOWER(people_personlocation.zip) IN('b15','b32','b36') THEN 'birmingham' 
+               WHEN (LOWER(django_city) IS NULL OR LOWER(django_city) = ' ') 
+                                            AND LOWER(people_personlocation.zip) IN('wn1','wn12') THEN 'wigan' 
+               WHEN (LOWER(django_city) IS NULL OR LOWER(django_city) = ' ') 
+                                            AND LOWER(people_personlocation.zip) IN('ub6') THEN 'Wembley' 
+               WHEN (LOWER(django_city) IS NULL OR LOWER(django_city) = ' ') THEN LOWER(people_personlocation_city)
+               ELSE LOWER(django_city)
+               END AS cities_with_london_splicing,
+          LEFT(LOWER(zip),4) AS posty_code,
+          people_personlocation.country_code AS country_code
+       FROM 
+          roverdb.people_person
+       JOIN 
+          roverdb.people_personlocation 
+       ON 
+          people_personlocation.person_id = people_person.id
+        LEFT JOIN 
+          roverdb.django_geo_zipcode
+        ON 
+          REPLACE(django_geo_zipcode.zip_code,' ','') = REPLACE(people_personlocation.zip,' ','')
+      WHERE 
+          people_personlocation.country_code = 'GB'  
