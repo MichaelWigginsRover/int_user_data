@@ -1,0 +1,7 @@
+
+  SELECT
+    *
+  FROM
+    roverdb.uk_nerds
+  UNION ALL
+    SELECT * FROM roverdb.non_uk_nerds
