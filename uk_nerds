@@ -1,0 +1,16 @@
+  SELECT
+     providers.person_id AS location_person_id,
+     MIN(zip) AS zip,
+     MIN(CASE WHEN (cities_with_london_splicing IS NULL OR cities_with_london_splicing = " ") 
+              THEN cities_with_london_splicing_ordered
+              ELSE cities_with_london_splicing END) AS our_city,
+     MIN(people_personlocation_city) AS people_personlocation_city,
+     MIN(country_code) AS country_code
+  FROM
+    roverdb.providers
+  LEFT JOIN
+    roverddb.ordering_sb
+  USING
+    (posty_code)
+  GROUP BY
+    1
