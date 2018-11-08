@@ -1,0 +1,20 @@
+  SELECT
+    posty_code,
+    cities_with_london_splicing AS cities_with_london_splicing_ordered
+  FROM
+      (
+        SELECT
+          posty_code,
+          cities_with_london_splicing,
+          COUNT(person_id) AS account_count,
+          ROW_NUMBER() OVER( PARTITION BY posty_code ORDER BY city_order DESC) AS row_ordering,
+          (COUNT(person_id)+RANDOM()) AS city_order 
+        FROM
+          roverdb.providers
+        WHERE
+          cities_with_london_splicing IS NOT NULL AND cities_with_london_splicing != " "
+        GROUP BY
+          1,2
+       )
+    WHERE
+      row_ordering = 1  
