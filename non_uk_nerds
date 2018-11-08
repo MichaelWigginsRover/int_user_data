@@ -1,0 +1,15 @@
+SELECT
+    people_person.id AS person_id,
+    MIN(people_personlocation.zip) AS zip,
+    MIN(people_personlocation.city) AS our_city,
+    MIN(people_personlocation.city) AS people_personlocation_city,
+    MIN(people_personlocation.country_code) AS country_code
+  FROM
+   roverdb.people_person
+  LEFT JOIN
+    roverdb.people_personlocation
+  ON
+    (people_personlocation.person_id = people_person.id)
+  WHERE
+    people_personlocation.country_code != 'GB'
+  GROUP BY 1 
