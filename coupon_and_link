@@ -1,7 +1,6 @@
   SELECT
     promos_coupon.code AS empm_code,
-    promos_coupon.person_id AS coupon_person_id,
-    CONCAT('https://www.rover.com/sit/', empm_code) AS profile_link
+    promos_coupon.person_id AS coupon_person_id
   FROM
     roverdb.promos_coupon 
   LEFT JOIN
