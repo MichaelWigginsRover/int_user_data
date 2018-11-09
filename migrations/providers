@@ -1,0 +1,28 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.providers;
+
+CREATE TABLE roverdb.providers 
+(
+ django_converted VARCHAR(16),
+ zip VARCHAR(16),
+ person_id INTEGER,
+ sitter_intent INTEGER,
+ django_city VARCHAR(64),
+ people_personlocation_city VARCHAR(64),
+ final_city VARCHAR(64),
+ cities_with_london_splicing VARCHAR(64),
+ posty_code VARCHAR(16),
+)
+
+SORTKEY(person_id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.providers
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.providers
+TO GROUP periscope;
+
+COMMIT;
