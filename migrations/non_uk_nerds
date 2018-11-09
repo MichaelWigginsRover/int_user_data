@@ -11,7 +11,7 @@ CREATE TABLE roverdb.non_uk_nerds
     country_code VARCHAR(16)
 )
 
-SORTKEY(id) ;
+SORTKEY(person_id) ;
 
 SET wlm_query_slot_count TO 3 ;
 
@@ -22,13 +22,3 @@ GRANT SELECT ON TABLE roverdb.non_uk_nerds
 TO GROUP periscope;
 
 COMMIT;
-
-
-
-
-
-
-
-
-
-
