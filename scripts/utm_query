@@ -1,9 +1,12 @@
 -- # frequency: daily
--- # ddl: migrations/0297_ddl_standard_reports.needs.sql
+-- # ddl: int_user_data/migrations/utm_query
 -- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
 -- # wlm_query_slot_count: 1
 -- # requires:
--- #   - standard_reports.conversation_zip.sql
+-- #  ../high_priority.sql
+
+
+/* dependent: marketing_personreferraltracking, wizards_wizardprogress */
 
 
 CREATE TEMP TABLE utm_query_staging (like roverdb.utm_query);
