@@ -4,11 +4,11 @@ DROP TABLE IF EXISTS roverdb.ordering_sb;
 
 CREATE TABLE roverdb.ordering_sb 
 (
- posty_code VARCHAR(32),
+ posty_code VARCHAR(16),
  cities_with_london_splicing_ordered VARCHAR(64)
 )
 
-SORTKEY(coupon_person_id) ;
+/* I could add a sort on posty_code here and another to the providers query as they join on that later? */ 
 
 SET wlm_query_slot_count TO 3 ;
 
