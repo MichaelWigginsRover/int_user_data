@@ -1,0 +1,43 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.service_details;
+
+CREATE TABLE roverdb.service_details 
+(
+  services_provider_id INTEGER,
+  first_searchable_date TIMESTAMP WITHOUT TIME ZONE,
+  overnight_boarding_price_per_unit FLOAT,
+  overnight_boarding_searchable TIMESTAMP WITHOUT TIME ZONE,
+  day_care_price_per_unit FLOAT,
+  day_care_searchable TIMESTAMP WITHOUT TIME ZONE,
+  dog_walking_price_per_unit FLOAT,
+  dog_walking_searchableTIMESTAMP WITHOUT TIME ZONE,
+  drop_in_price_per_unit FLOAT,
+  drop_in_searchable TIMESTAMP WITHOUT TIME ZONE,
+  overnight_traveling_price_per_unit FLOAT,
+  overnight_traveling_searchable TIMESTAMP WITHOUT TIME ZONE,
+  first_activation TIMESTAMP WITHOUT TIME ZONE,
+  first_matriculation TIMESTAMP WITHOUT TIME ZONE,   
+  overnight_boarding_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  overnight_boarding_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  day_care_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  day_care_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  dog_walking_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  dog_walking_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  drop_in_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  drop_in_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  overnight_traveling_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  overnight_traveling_matriculated_at TIMESTAMP WITHOUT TIME ZONE   
+)
+
+SORTKEY(services_provider_id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.service_details
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.service_details
+TO GROUP periscope;
+
+COMMIT;
