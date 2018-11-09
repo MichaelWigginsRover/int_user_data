@@ -1,5 +1,5 @@
    SELECT  
-        REPLACE(django_geo_zipcode.zip_code,' ',''),
+        REPLACE(django_geo_zipcode.zip_code,' ','') AS django_converted,
         people_personlocation.zip,
         people_person.id AS person_id,
         people_person.sitter_intent,
