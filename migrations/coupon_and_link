@@ -1,0 +1,21 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.coupon_and_link;
+
+CREATE TABLE roverdb.coupon_and_link 
+(
+  empm_code VARCHAR(64),
+  coupon_person_id INTEGER
+)
+
+SORTKEY(coupon_person_id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.coupon_and_link
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.coupon_and_link
+TO GROUP periscope;
+
+COMMIT;
