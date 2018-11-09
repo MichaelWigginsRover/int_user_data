@@ -1,0 +1,21 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.ordering_sb;
+
+CREATE TABLE roverdb.ordering_sb 
+(
+ posty_code VARCHAR(32),
+ cities_with_london_splicing_ordered VARCHAR(64)
+)
+
+SORTKEY(coupon_person_id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.ordering_sb
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.ordering_sb
+TO GROUP periscope;
+
+COMMIT;
