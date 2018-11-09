@@ -1,0 +1,21 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.utm_query;
+
+CREATE TABLE roverdb.utm_query 
+(
+  utm_details_people_id INTEGER,
+  created_utm_source VARVHAR(64) 
+)
+
+SORTKEY(utm_details_people_id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.utm_query
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.utm_query
+TO GROUP periscope;
+
+COMMIT;
