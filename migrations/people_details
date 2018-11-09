@@ -1,0 +1,42 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.people_details;
+
+CREATE TABLE roverdb.people_details 
+(
+    id INTEGER,
+    user_id INTEGER,
+    added TIMESTAMP WITHOUT TIME ZONE,
+    sitter_intent INTEGER,
+    sitter_intent_at TIMESTAMP WITHOUT TIME ZONE,
+    description VARCHAR(2048),
+    response_time NUMERIC,
+    ratings_average FLOAT,
+    response_percentFLOAT,
+    ratings_count NUMERIC,
+    deactivated_at TIMESTAMP WITHOUT TIME ZONE,
+    username VARCHAR(64),
+    first_name VARCHAR(64),
+    last_name VARCHAR(64),
+    gender VARCHAR(64),
+    email VARCHAR(64),
+    budget_group VARCHAR(64),
+    channel VARCHAR(64),
+    sitter_web_profile_link VARCHAR(2048),
+    admin_profile_link VARCHAR(2048)
+)
+
+SORTKEY(id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.people_details
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.people_details
+TO GROUP periscope;
+
+COMMIT;
+
+
+
