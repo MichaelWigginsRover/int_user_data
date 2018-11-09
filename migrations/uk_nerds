@@ -1,0 +1,23 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.uk_nerds;
+
+CREATE TABLE roverdb.uk_nerds 
+(
+  location_person_id INTEGER,
+  zip VARCHAR(64),
+  people_personlocation_city VARCHAR(64),
+  country_code VARCHAR(16)
+)
+
+SORTKEY(location_person_id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.uk_nerds
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.uk_nerds
+TO GROUP periscope;
+
+COMMIT;
