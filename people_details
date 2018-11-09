@@ -16,7 +16,9 @@
     people_person.gender AS gender,
     auth_user.email AS email,
     budget_group,
-    channel
+    channel,
+    CASE WHEN sitter_intent = 0 THEN '' ELSE CONCAT(CONCAT('https://www.rover.com/members/', people_person.slug),'/') END AS sitter_web_profile_link,
+    CONCAT('https://www.rover.com/admin/people/person/?id=',people_person.id) AS admin_profile_link
   FROM
     roverdb.people_person
   LEFT JOIN
