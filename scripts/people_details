@@ -1,0 +1,63 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/people_details
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: mpeople_person, auth_user, marketing_source */
+
+
+CREATE TEMP TABLE people_details_staging (like roverdb.people_details);
+
+INSERT INTO roverdb.people_details
+  SELECT
+    people_person.id AS id,
+    people_person.user_id AS user_id,
+    people_person.added AS added,
+    CASE WHEN people_person.sitter_intent = 0 AND people_person.sitter_intent_at IS NOT NULL THEN 1 ELSE people_person.sitter_intent END AS sitter_intent,
+    CASE WHEN people_person.sitter_intent_at IS NULL AND people_person.sitter_intent = 1 THEN people_person.added ELSE people_person.sitter_intent_at END AS sitter_intent_at,
+    people_person.description AS description,
+    people_person.response_time AS response_time,
+    people_person.ratings_average AS ratings_average,
+    people_person.response_percent AS response_percent,
+    people_person.ratings_count AS ratings_count,
+    people_person.deactivated_at AS deactivated_at,
+    auth_user.username AS username,
+    auth_user.first_name AS first_name,
+    auth_user.last_name AS last_name,
+    people_person.gender AS gender,
+    auth_user.email AS email,
+    budget_group,
+    channel,
+    CASE WHEN sitter_intent = 0 THEN '' ELSE CONCAT(CONCAT('https://www.rover.com/members/', people_person.slug),'/') END AS sitter_web_profile_link,
+    CONCAT('https://www.rover.com/admin/people/person/?id=',people_person.id) AS admin_profile_link
+  FROM
+    roverdb.people_person
+  LEFT JOIN
+    roverdb.auth_user
+  ON
+    (people_person.user_id = auth_user.id)
+  LEFT JOIN
+    marketing.marketing_source
+  ON
+    (marketing_source.person_id = people_person.id)
+;
+
+
+
+BEGIN TRANSACTION;
+
+DELETE FROM roverdb.people_details;
+
+INSERT INTO roverdb.people_details
+SELECT
+  *
+FROM
+  roverdb.people_details_staging
+;
+
+COMMIT;
+
+DROP TABLE roverdb.people_details_staging;
