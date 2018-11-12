@@ -1,0 +1,48 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/uk_nerds
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: marketing_personreferraltracking, wizards_wizardprogress */
+
+
+CREATE TEMP TABLE uk_nerds_staging (like roverdb.uk_nerds);
+
+INSERT INTO roverdb.uk_nerds
+  SELECT
+     providers.person_id AS location_person_id,
+     MIN(zip) AS zip,
+     MIN(CASE WHEN (cities_with_london_splicing IS NULL OR cities_with_london_splicing = " ") 
+              THEN cities_with_london_splicing_ordered
+              ELSE cities_with_london_splicing END) AS our_city,
+     MIN(people_personlocation_city) AS people_personlocation_city,
+     MIN(country_code) AS country_code
+  FROM
+    roverdb.providers
+  LEFT JOIN
+    roverddb.ordering_sb
+  USING
+    (posty_code)
+  GROUP BY
+    1
+;
+
+
+
+BEGIN TRANSACTION;
+
+DELETE FROM roverdb.uk_nerds;
+
+INSERT INTO roverdb.uk_nerds
+SELECT
+  *
+FROM
+  roverdb.uk_nerds_staging
+;
+
+COMMIT;
+
+DROP TABLE roverdb.uk_nerds_staging;
