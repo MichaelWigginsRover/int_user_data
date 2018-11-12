@@ -1,0 +1,52 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/ordering_sb
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: providers */
+
+
+CREATE TEMP TABLE ordering_sb_staging (like roverdb.ordering_sb);
+
+INSERT INTO roverdb.ordering_sb
+  SELECT
+    posty_code,
+    cities_with_london_splicing AS cities_with_london_splicing_ordered
+  FROM
+      (
+        SELECT
+          posty_code,
+          cities_with_london_splicing,
+          COUNT(person_id) AS account_count,
+          ROW_NUMBER() OVER( PARTITION BY posty_code ORDER BY city_order DESC) AS row_ordering,
+          (COUNT(person_id)+RANDOM()) AS city_order 
+        FROM
+          roverdb.providers
+        WHERE
+          cities_with_london_splicing IS NOT NULL AND cities_with_london_splicing != " "
+        GROUP BY
+          1,2
+       )
+    WHERE
+      row_ordering = 1  
+;
+
+
+
+BEGIN TRANSACTION;
+
+DELETE FROM roverdb.ordering_sb;
+
+INSERT INTO roverdb.ordering_sb
+SELECT
+  *
+FROM
+  roverdb.ordering_sb_staging
+;
+
+COMMIT;
+
+DROP TABLE roverdb.ordering_sb_staging;
