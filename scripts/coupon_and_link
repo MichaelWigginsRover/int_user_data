@@ -1,0 +1,44 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/coupon_and_link
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: marketing_personreferraltracking, wizards_wizardprogress */
+
+
+CREATE TEMP TABLE coupon_and_link_staging (like roverdb.coupon_and_link);
+
+INSERT INTO roverdb.coupon_and_link
+  SELECT
+    promos_coupon.code AS empm_code,
+    promos_coupon.person_id AS coupon_person_id
+  FROM
+    roverdb.promos_coupon 
+  LEFT JOIN
+    roverdb.promos_coupongroup
+  ON
+    (promos_coupongroup.id = promos_coupon.group_id)
+  WHERE
+    group_id = 1
+    AND title = 'Sitter Self Promotion'   
+;
+
+
+
+BEGIN TRANSACTION;
+
+DELETE FROM roverdb.coupon_and_link;
+
+INSERT INTO roverdb.coupon_and_link
+SELECT
+  *
+FROM
+  roverdb.coupon_and_link_staging
+;
+
+COMMIT;
+
+DROP TABLE roverdb.coupon_and_link_staging;
