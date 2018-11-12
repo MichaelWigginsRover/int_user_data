@@ -1,0 +1,68 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS roverdb.int_user_data;
+
+CREATE TABLE roverdb.int_user_data 
+(
+  id INTEGER,
+  user_id INTEGER,
+  added TIMESTAMP WITHOUT TIME ZONE,
+  sitter_intent INTEGER,
+  sitter_intent_at TIMESTAMP WITHOUT TIME ZONE,
+  first_searchable_date TIMESTAMP WITHOUT TIME ZONE,
+  description VARCHAR(2048),
+  response_time INTEGER,
+  ratings_average FLOAT,
+  response_percent FLOAT,
+  ratings_count INTEGER,
+  deactivated_at TIMESTAMP WITHOUT TIME ZONE,
+  username VARCHAR(64),
+  first_name VARCHAR(64),
+  last_name VARCHAR(64),
+  gender VARCHAR(64),
+  email VARCHAR(64),
+  budget_group VARCHAR(64),
+  channel VARCHAR(64),
+  sitter_web_profile_link VARCHAR(2048),
+  admin_profile_link VARCHAR(2048),
+  overnight_boarding_price_per_unit FLOAT,
+  overnight_boarding_searchable TIMESTAMP WITHOUT TIME ZONE,
+  day_care_price_per_unit FLOAT,
+  day_care_searchable TIMESTAMP WITHOUT TIME ZONE,
+  dog_walking_price_per_unit FLOAT,
+  dog_walking_searchable TIMESTAMP WITHOUT TIME ZONE,
+  drop_in_price_per_unit FLOAT,
+  drop_in_searchable TIMESTAMP WITHOUT TIME ZONE,
+  overnight_traveling_price_per_unit FLOAT,
+  overnight_traveling_searchable TIMESTAMP WITHOUT TIME ZONE,
+  first_activation TIMESTAMP WITHOUT TIME ZONE,
+  first_matriculation TIMESTAMP WITHOUT TIME ZONE,
+  overnight_boarding_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  overnight_boarding_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  day_care_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  day_care_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  dog_walking_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  dog_walking_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  drop_in_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  drop_in_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  overnight_traveling_activated_at TIMESTAMP WITHOUT TIME ZONE,
+  overnight_traveling_matriculated_at TIMESTAMP WITHOUT TIME ZONE,
+  created_utm_source VARCHAR(64), 
+  empm_code VARCHAR(64),
+  zip VARCHAR(64),
+  our_city VARCHAR(64),
+  people_personlocation_city VARCHAR(64),
+  country_code VARCHAR(16)  
+)
+
+SORTKEY(id) ;
+
+SET wlm_query_slot_count TO 3 ;
+
+GRANT SELECT ON TABLE roverdb.int_user_data
+TO GROUP acc_non_sensitive;
+
+GRANT SELECT ON TABLE roverdb.int_user_data
+TO GROUP periscope;
+
+COMMIT;
