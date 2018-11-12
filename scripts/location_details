@@ -1,0 +1,39 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/location_details
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: UK nerds and non_uk_nerds (indirectly: providers, people_person, people_personlocation, django_geo_zipcode) */
+
+
+CREATE TEMP TABLE location_details_staging (like roverdb.location_details);
+
+INSERT INTO roverdb.location_details
+
+  SELECT
+    *
+  FROM
+    roverdb.uk_nerds
+  UNION ALL
+    SELECT * FROM roverdb.non_uk_nerds
+;
+
+
+
+BEGIN TRANSACTION;
+
+DELETE FROM roverdb.location_details;
+
+INSERT INTO roverdb.location_details
+SELECT
+  *
+FROM
+  roverdb.location_details_staging
+;
+
+COMMIT;
+
+DROP TABLE roverdb.location_details_staging;
