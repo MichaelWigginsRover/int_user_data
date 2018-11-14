@@ -9,9 +9,9 @@
 /* dependent: marketing_personreferraltracking, wizards_wizardprogress */
 
 
-CREATE TEMP TABLE coupon_and_link_staging (like roverdb.coupon_and_link);
+CREATE TEMP TABLE analysts.int_user_data_coupon_staging (like analysts.int_user_data_coupon);
 
-INSERT INTO roverdb.coupon_and_link
+INSERT INTO analysts.int_user_data_coupon
   SELECT
     promos_coupon.code AS empm_code,
     promos_coupon.person_id AS coupon_person_id
@@ -30,15 +30,15 @@ INSERT INTO roverdb.coupon_and_link
 
 BEGIN TRANSACTION;
 
-DELETE FROM roverdb.coupon_and_link;
+DELETE FROM analysts.int_user_data_coupon;
 
-INSERT INTO roverdb.coupon_and_link
+INSERT INTO analysts.int_user_data_coupon
 SELECT
   *
 FROM
-  roverdb.coupon_and_link_staging
+  analysts.int_user_data_coupon_staging
 ;
 
 COMMIT;
 
-DROP TABLE roverdb.coupon_and_link_staging;
+DROP TABLE analysts.int_user_data_coupon_staging;
