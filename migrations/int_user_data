@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS roverdb.int_user_data;
+DROP TABLE IF EXISTS analysts.int_user_data;
 
-CREATE TABLE roverdb.int_user_data 
+CREATE TABLE analysts.int_user_data 
 (
   id INTEGER,
   user_id INTEGER,
@@ -59,10 +59,10 @@ SORTKEY(id) ;
 
 SET wlm_query_slot_count TO 3 ;
 
-GRANT SELECT ON TABLE roverdb.int_user_data
+GRANT SELECT ON TABLE analysts.int_user_data
 TO GROUP acc_non_sensitive;
 
-GRANT SELECT ON TABLE roverdb.int_user_data
+GRANT SELECT ON TABLE analysts.int_user_data
 TO GROUP periscope;
 
 COMMIT;
