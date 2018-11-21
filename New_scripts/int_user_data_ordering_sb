@@ -1,0 +1,49 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/int_user_data_ordering_sb
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: providers */
+
+BEGIN TRANSACTION
+;
+
+CREATE TABLE analysts.int_user_data_ordering_sb_staging (like analysts.int_user_data_ordering_sb)
+SORTKEY(id) 
+AS
+
+  SELECT
+    posty_code,
+    cities_with_london_splicing AS cities_with_london_splicing_ordered
+  FROM
+      (
+        SELECT
+          posty_code,
+          cities_with_london_splicing,
+          COUNT(person_id) AS account_count,
+          ROW_NUMBER() OVER( PARTITION BY posty_code ORDER BY city_order DESC) AS row_ordering,
+          (COUNT(person_id)+RANDOM()) AS city_order 
+        FROM
+          analysts.int_user_data_uk_location
+        WHERE
+          cities_with_london_splicing IS NOT NULL AND cities_with_london_splicing != " "
+        GROUP BY
+          1,2
+       )
+    WHERE
+      row_ordering = 1  
+;
+
+DROP TABLE IF EXISTS analysts.int_user_data_ordering_sb CASCADE
+;
+
+ALTER TABLE aanalysts.int_user_data_ordering_sb_staging
+RENAME TO analysts.int_user_data_ordering_sb
+;
+
+
+COMMIT
+;
