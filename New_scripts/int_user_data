@@ -61,7 +61,7 @@ SELECT
   services_details.overnight_traveling_activated_at,
   services_details.overnight_traveling_matriculated_at,
   utm_details.created_utm_source, 
-  coupon_and_link_details.empm_code,
+  coupon.empm_code,
   location_details.zip,
   location_details.our_city,
   location_details.people_personlocation_city,
@@ -77,9 +77,9 @@ LEFT JOIN
 ON
   (utm_details.utm_details_people_id = people_details.id)
 LEFT JOIN
-  roverdb.coupon_and_link_details
+  roverdb.coupon
 ON
-  (coupon_and_link_details.coupon_person_id = people_details.id)
+  (coupon.coupon_person_id = people_details.id)
 LEFT JOIN
   roverdb.location_details
 ON
