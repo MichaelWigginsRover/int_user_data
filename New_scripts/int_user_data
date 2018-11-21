@@ -1,0 +1,99 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/int_user_data
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: people_person, auth_user, marketing_source */
+
+
+BEGIN TRANSACTION
+;
+
+CREATE TABLE analysts.int_user_data_staging (like analysts.int_user_data)
+SORTKEY(id) 
+AS
+
+SELECT
+  people_details.id,
+  people_details.user_id,
+  people_details.added,
+  people_details.sitter_intent,
+  people_details.sitter_intent_at,
+  services_details.first_searchable_date,
+  people_details.description,
+  people_details.response_time,
+  people_details.ratings_average,
+  people_details.response_percent,
+  people_details.ratings_count,
+  people_details.deactivated_at,
+  people_details.username,
+  people_details.first_name,
+  people_details.last_name,
+  people_details.gender,
+  people_details.email,
+  people_details.budget_group,
+  people_details.channel,
+  people_details.sitter_web_profile_link,
+  people_details.admin_profile_link,
+  services_details.overnight_boarding_price_per_unit,
+  services_details.overnight_boarding_searchable,
+  services_details.day_care_price_per_unit,
+  services_details.day_care_searchable,
+  services_details.dog_walking_price_per_unit,
+  services_details.dog_walking_searchable,
+  services_details.drop_in_price_per_unit,
+  services_details.drop_in_searchable,
+  services_details.overnight_traveling_price_per_unit,
+  services_details.overnight_traveling_searchable,
+  services_details.first_activation,
+  services_details.first_matriculation,
+  services_details.overnight_boarding_activated_at,
+  services_details.overnight_boarding_matriculated_at,
+  services_details.day_care_activated_at,
+  services_details.day_care_matriculated_at,
+  services_details.dog_walking_activated_at,
+  services_details.dog_walking_matriculated_at,
+  services_details.drop_in_activated_at,
+  services_details.drop_in_matriculated_at,
+  services_details.overnight_traveling_activated_at,
+  services_details.overnight_traveling_matriculated_at,
+  utm_details.created_utm_source, 
+  coupon_and_link_details.empm_code,
+  location_details.zip,
+  location_details.our_city,
+  location_details.people_personlocation_city,
+  location_details.country_code
+FROM
+  roverdb.people_details
+LEFT JOIN
+  roverdb.services_details
+ON
+  (services_details.services_provider_id = people_details.id)
+LEFT JOIN
+  roverdb.utm_details
+ON
+  (utm_details.utm_details_people_id = people_details.id)
+LEFT JOIN
+  roverdb.coupon_and_link_details
+ON
+  (coupon_and_link_details.coupon_person_id = people_details.id)
+LEFT JOIN
+  roverdb.location_details
+ON
+  (location_details.location_person_id = people_details.id)
+
+;
+
+DROP TABLE IF EXISTS analysts.int_user_data CASCADE
+;
+
+ALTER TABLE analysts.int_user_data_staging
+RENAME TO analysts.int_user_data
+;
+
+
+COMMIT
+;
