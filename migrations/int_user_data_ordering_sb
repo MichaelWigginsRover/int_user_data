@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS roverdb.ordering_sb;
+DROP TABLE IF EXISTS analysts.int_user_data_ordering_sb;
 
-CREATE TABLE roverdb.ordering_sb 
+CREATE TABLE analysts.int_user_data_ordering_sb 
 (
  posty_code VARCHAR(16),
  cities_with_london_splicing_ordered VARCHAR(64)
@@ -12,10 +12,10 @@ CREATE TABLE roverdb.ordering_sb
 
 SET wlm_query_slot_count TO 3 ;
 
-GRANT SELECT ON TABLE roverdb.ordering_sb
+GRANT SELECT ON TABLE analysts.int_user_data_ordering_sb
 TO GROUP acc_non_sensitive;
 
-GRANT SELECT ON TABLE roverdb.ordering_sb
+GRANT SELECT ON TABLE analysts.int_user_data_ordering_sb
 TO GROUP periscope;
 
 COMMIT;
