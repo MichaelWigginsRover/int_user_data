@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS roverdb.service_details;
+DROP TABLE IF EXISTS analysts.int_user_data_service_details;
 
-CREATE TABLE roverdb.service_details 
+CREATE TABLE analysts.int_user_data_service_details 
 (
   services_provider_id INTEGER,
   first_searchable_date TIMESTAMP WITHOUT TIME ZONE,
@@ -34,10 +34,10 @@ SORTKEY(services_provider_id) ;
 
 SET wlm_query_slot_count TO 3 ;
 
-GRANT SELECT ON TABLE roverdb.service_details
+GRANT SELECT ON TABLE analysts.int_user_data_service_details
 TO GROUP acc_non_sensitive;
 
-GRANT SELECT ON TABLE roverdb.service_details
+GRANT SELECT ON TABLE analysts.int_user_data_service_details
 TO GROUP periscope;
 
 COMMIT;
