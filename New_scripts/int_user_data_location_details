@@ -1,0 +1,37 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/int_user_data_location_details
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: UK nerds and non_uk_nerds (indirectly: providers, people_person, people_personlocation, django_geo_zipcode) */
+
+
+BEGIN TRANSACTION
+;
+
+CREATE TABLE analysts.int_user_data_location_details_staging (like analysts.int_user_data_location_details)
+SORTKEY(id) 
+AS
+
+
+  SELECT
+    *
+  FROM
+    analysts.int_user_data_uk_nerds
+  UNION ALL
+    SELECT * FROM analysts.int_user_data_non_uk_nerds
+;
+
+DROP TABLE IF EXISTS analysts.int_user_data_location_details CASCADE
+;
+
+ALTER TABLE analysts.int_user_data_location_details_staging
+RENAME TO analysts.int_user_data_location_details
+;
+
+
+COMMIT
+;
