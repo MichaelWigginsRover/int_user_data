@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS roverdb.uk_nerds;
+DROP TABLE IF EXISTS analysts.int_user_data_uk_nerds;
 
-CREATE TABLE roverdb.uk_nerds 
+CREATE TABLE analysts.int_user_data_uk_nerds 
 (
   location_person_id INTEGER,
   zip VARCHAR(64),
@@ -14,10 +14,10 @@ SORTKEY(location_person_id) ;
 
 SET wlm_query_slot_count TO 3 ;
 
-GRANT SELECT ON TABLE roverdb.uk_nerds
+GRANT SELECT ON TABLE analysts.int_user_data_uk_nerds
 TO GROUP acc_non_sensitive;
 
-GRANT SELECT ON TABLE roverdb.uk_nerds
+GRANT SELECT ON TABLE analysts.int_user_data_uk_nerds
 TO GROUP periscope;
 
 COMMIT;
