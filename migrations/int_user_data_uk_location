@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS roverdb.providers;
+DROP TABLE IF EXISTS analysts.int_user_data_uk_location;
 
-CREATE TABLE roverdb.providers 
+CREATE TABLE analysts.int_user_data_uk_location 
 (
  django_converted VARCHAR(16),
  zip VARCHAR(16),
@@ -19,10 +19,10 @@ SORTKEY(person_id) ;
 
 SET wlm_query_slot_count TO 3 ;
 
-GRANT SELECT ON TABLE roverdb.providers
+GRANT SELECT ON TABLE analysts.int_user_data_uk_location
 TO GROUP acc_non_sensitive;
 
-GRANT SELECT ON TABLE roverdb.providers
+GRANT SELECT ON TABLE analysts.int_user_data_uk_location
 TO GROUP periscope;
 
 COMMIT;
