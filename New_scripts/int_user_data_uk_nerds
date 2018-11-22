@@ -1,6 +1,6 @@
 -- # frequency: daily
 -- # ddl: int_user_data/migrations/int_user_data_uk_nerds
--- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # maintainer: Michael Wiggins <michael.wiggins@rover.com>
 -- # wlm_query_slot_count: 1
 -- # requires:
 -- #  ../high_priority.sql
@@ -21,7 +21,7 @@ BEGIN TRANSACTION
 ;
 
 CREATE TABLE analysts.int_user_data_uk_nerds_staging (like analysts.int_user_data_uk_nerds)
-SORTKEY(id) 
+SORTKEY(location_person_id) 
 AS
 
   SELECT
