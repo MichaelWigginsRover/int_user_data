@@ -25,7 +25,7 @@ BEGIN TRANSACTION
 ;
 
 CREATE TABLE analysts.int_user_data_location_details_staging (like analysts.int_user_data_location_details)
-SORTKEY(id) 
+
 AS
 
 
