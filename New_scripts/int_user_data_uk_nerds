@@ -1,0 +1,45 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/int_user_data_uk_nerds
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: marketing_personreferraltracking, wizards_wizardprogress */
+
+BEGIN TRANSACTION
+;
+
+CREATE TABLE analysts.int_user_data_uk_nerds_staging (like analysts.int_user_data_uk_nerds)
+SORTKEY(id) 
+AS
+
+  SELECT
+     int_user_data_uk_location.person_id AS location_person_id,
+     MIN(zip) AS zip,
+     MIN(CASE WHEN (cities_with_london_splicing IS NULL OR cities_with_london_splicing = " ") 
+              THEN cities_with_london_splicing_ordered
+              ELSE cities_with_london_splicing END) AS our_city,
+     MIN(people_personlocation_city) AS people_personlocation_city,
+     MIN(country_code) AS country_code
+  FROM
+    analysts.int_user_data_uk_location
+  LEFT JOIN
+    analysts.int_user_data_ordering_sb
+  USING
+    (posty_code)
+  GROUP BY
+    1
+;
+
+DROP TABLE IF EXISTS analysts.int_user_data_location_details CASCADE
+;
+
+ALTER TABLE analysts.int_user_data_location_details_staging
+RENAME TO analysts.int_user_data_location_details
+;
+
+
+COMMIT
+;
