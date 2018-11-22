@@ -13,6 +13,9 @@
 -- #  ../marketing.marketing_source.sql
 -- #  ../marketing.promos.sql
 -- #  ../analysts.eventstream_web_utm_parsing_from_current_url.sql
+-- #  ../analysts.int_user_data_ordering_sb
+-- #  ../analysts.int_user_data_uk_location
+
 
 BEGIN TRANSACTION
 ;
