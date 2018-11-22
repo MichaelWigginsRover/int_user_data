@@ -1,0 +1,80 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/int_user_data_service_details
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: services_service, standard_reports.services, services_serviceaddon */
+
+BEGIN TRANSACTION
+;
+
+CREATE TABLE analysts.int_user_data_service_details_staging (like analysts.int_user_data_service_details)
+SORTKEY(id) 
+AS
+
+SELECT
+    services_service.provider_id AS services_provider_id,
+    MIN(services_service.searchable_date) AS first_searchable_date,
+    MAX(CASE WHEN services.service_type = 'overnight-boarding' THEN  services_serviceaddon.price_per_unit ELSE NULL END) AS overnight_boarding_price_per_unit,
+    MAX(CASE WHEN services.service_type = 'overnight-boarding' AND services_service.searchable = 1 THEN services_service.searchable_date ELSE NULL END) AS overnight_boarding_searchable,
+    MAX(CASE WHEN services.service_type = 'doggy-day-care' THEN  services_serviceaddon.price_per_unit ELSE NULL END) AS day_care_price_per_unit,
+    MAX(CASE WHEN services.service_type = 'doggy-day-care' AND  services_service.searchable = 1 THEN services_service.searchable_date ELSE NULL END) AS day_care_searchable,
+    MAX(CASE WHEN services.service_type = 'dog-walking' THEN  services_serviceaddon.price_per_unit ELSE NULL END) AS dog_walking_price_per_unit,
+    MAX(CASE WHEN services.service_type = 'dog-walking' AND services_service.searchable = 1 THEN services_service.searchable_date ELSE NULL END) AS dog_walking_searchable,
+    MAX(CASE WHEN services.service_type = 'drop-in' THEN  services_serviceaddon.price_per_unit ELSE NULL END) AS drop_in_price_per_unit,
+    MAX(CASE WHEN services.service_type = 'drop-in' AND services_service.searchable = 1 THEN services_service.searchable_date ELSE NULL END) AS drop_in_searchable,
+    MAX(CASE WHEN services.service_type = 'overnight-traveling' THEN  services_serviceaddon.price_per_unit ELSE NULL END) AS overnight_traveling_price_per_unit,
+    MAX(CASE WHEN services.service_type = 'overnight-traveling'  AND services_service.searchable = 1 THEN services_service.searchable_date ELSE NULL END) AS overnight_traveling_searchable,
+    MIN(service_first_booking_date) AS first_activation,
+    MIN(service_third_booking_date) AS first_matriculation,   
+    MAX(CASE WHEN services.service_type = 'overnight-boarding'  THEN service_first_booking_date ELSE NULL END) AS overnight_boarding_activated_at,
+    MAX(CASE WHEN services.service_type = 'overnight-boarding' THEN  service_third_booking_date ELSE NULL END) AS overnight_boarding_matriculated_at,
+    MAX(CASE WHEN services.service_type = 'doggy-day-care'THEN  service_first_booking_date ELSE NULL END) AS day_care_activated_at,
+    MAX(CASE WHEN services.service_type = 'doggy-day-care' THEN  service_third_booking_date ELSE NULL END) AS day_care_matriculated_at,
+    MAX(CASE WHEN services.service_type = 'dog-walking'  THEN service_first_booking_date ELSE NULL END) AS dog_walking_activated_at,
+    MAX(CASE WHEN services.service_type = 'dog-walking'  THEN service_third_booking_date ELSE NULL END) AS dog_walking_matriculated_at,
+    MAX(CASE WHEN services.service_type = 'drop-in'  THEN  service_first_booking_date ELSE NULL END) AS drop_in_activated_at,
+    MAX(CASE WHEN services.service_type = 'drop-in' THEN  service_third_booking_date ELSE NULL END) AS drop_in_matriculated_at,
+    MAX(CASE WHEN services.service_type = 'overnight-traveling'  THEN  service_first_booking_date ELSE NULL END) AS overnight_traveling_activated_at,
+    MAX(CASE WHEN services.service_type = 'overnight-traveling' THEN  service_third_booking_date ELSE NULL END) AS overnight_traveling_matriculated_at   
+  FROM
+    roverdb.services_service
+  JOIN
+    standard_reports.services
+  ON
+    (services.service_id = services_service.id)
+  JOIN
+    roverdb.services_serviceaddon
+  ON
+    (services_serviceaddon.service_id = services_service.id)
+  INNER JOIN 
+        (SELECT 
+            services_service.provider_id AS inner_id,
+            MAX(CASE WHEN services_service.modified IS NULL THEN services_service.added ELSE services_service.modified END) AS max_date,
+            services_service.service_type_id AS inner_type
+         FROM
+            roverdb.services_service
+         GROUP BY
+           1,3)
+  ON
+    (inner_id = services_service.provider_id)
+    AND (max_date = services_service.modified)
+    AND (inner_type =  services_service.service_type_id)
+  GROUP BY
+    1
+    
+;
+
+DROP TABLE IF EXISTS analysts.int_user_data_service_details CASCADE
+;
+
+ALTER TABLE analysts.int_user_data_service_details_staging
+RENAME TO analysts.int_user_data_service_details
+;
+
+
+COMMIT
+;
