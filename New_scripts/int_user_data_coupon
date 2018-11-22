@@ -1,6 +1,6 @@
 -- # frequency: daily
 -- # ddl: int_user_data/migrations/coupon_and_link
--- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # maintainer: Michael Wiggins <michael.wiggins@rover.com>
 -- # wlm_query_slot_count: 1
 -- # requires:
 -- #  ../high_priority.sql
@@ -14,8 +14,6 @@
 -- #  ../marketing.promos.sql
 -- #  ../analysts.eventstream_web_utm_parsing_from_current_url.sql
 
-
-/* dependent: marketing_personreferraltracking, wizards_wizardprogress */
 
 BEGIN TRANSACTION
 ;
