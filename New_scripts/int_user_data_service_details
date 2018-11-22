@@ -1,6 +1,6 @@
 -- # frequency: daily
 -- # ddl: int_user_data/migrations/int_user_data_service_details
--- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # maintainer: Michael Wiggins <michael.wiggins@rover.com>
 -- # wlm_query_slot_count: 1
 -- # requires:
 -- #  ../high_priority.sql
@@ -18,7 +18,7 @@ BEGIN TRANSACTION
 ;
 
 CREATE TABLE analysts.int_user_data_service_details_staging (like analysts.int_user_data_service_details)
-SORTKEY(id) 
+SORTKEY(services_provider_id) 
 AS
 
 SELECT
