@@ -1,6 +1,6 @@
 -- # frequency: daily
 -- # ddl: int_user_data/migrations/int_user_data_utm_query
--- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # maintainer: Michael Wiggins <michael.wiggins@rover.com>
 -- # wlm_query_slot_count: 1
 -- # requires:
 -- #  ../high_priority.sql
