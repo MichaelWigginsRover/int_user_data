@@ -4,9 +4,15 @@
 -- # wlm_query_slot_count: 1
 -- # requires:
 -- #  ../high_priority.sql
-
-
-/* dependent: people_person, people_personlocation, django_geo_zipcode */
+-- #  ../standard_reports.people.sql
+-- #  ../standard_reports.sitter_intent.sql
+-- #  ../standard_reports.service_activated_to_matriculated.sql
+-- #  ../standard_reports.services.sql
+-- #  ../standard_reports.b_stays.sql
+-- #  ../standard_reports.sitter_searchable_to_activated.sql
+-- #  ../marketing.marketing_source.sql
+-- #  ../marketing.promos.sql
+-- #  ../analysts.eventstream_web_utm_parsing_from_current_url.sql
 
 
 BEGIN TRANSACTION
