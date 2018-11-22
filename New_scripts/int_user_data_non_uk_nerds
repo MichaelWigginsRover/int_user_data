@@ -1,0 +1,45 @@
+-- # frequency: daily
+-- # ddl: int_user_data/migrations/int_user_data_non_uk_nerds
+-- # maintainer: Michael 'The Great' Wiggins <michael.wiggins@rover.com>
+-- # wlm_query_slot_count: 1
+-- # requires:
+-- #  ../high_priority.sql
+
+
+/* dependent: people_person, people_personlocation */
+
+BEGIN TRANSACTION
+;
+
+CREATE TABLE analysts.int_user_data_non_uk_nerds_staging (like analysts.int_user_data_non_uk_nerds)
+SORTKEY(person_id) 
+AS
+
+SELECT
+    people_person.id AS person_id,
+    MIN(people_personlocation.zip) AS zip,
+    MIN(people_personlocation.city) AS our_city,
+    MIN(people_personlocation.city) AS people_personlocation_city,
+    MIN(people_personlocation.country_code) AS country_code
+  FROM
+   roverdb.people_person
+  LEFT JOIN
+    roverdb.people_personlocation
+  ON
+    (people_personlocation.person_id = people_person.id)
+  WHERE
+    people_personlocation.country_code != 'GB'
+  GROUP BY 1 
+  
+;
+
+DROP TABLE IF EXISTS analysts.int_user_data_non_uk_nerds CASCADE
+;
+
+ALTER TABLE analysts.int_user_data_non_uk_nerds_staging
+RENAME TO analysts.int_user_data_non_uk_nerds
+;
+
+
+COMMIT
+;
